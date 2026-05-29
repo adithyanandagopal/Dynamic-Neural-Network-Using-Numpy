@@ -51,6 +51,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import pickle
 
+
 class model:
     def __init__(self,structure:list[int],base_address:str):
         self.structure = structure
@@ -59,6 +60,7 @@ class model:
         self.lyrs = len(structure)
         self.ip = structure[0]
         self.op = structure[-1]
+        
         self.base_address = base_address
 
         if self.op == 1:
@@ -201,7 +203,7 @@ class model:
                         dw[d] += cur.T @ delta[d]  # (784,1) @ (1,128) = (784,128)
                         cur =self.z[d]
 
-                        db[d] += np.sum(delta[d],axis = 0)
+                        db[d] += np.sum(delta[d],axis = 0,keepdims=True)
 
                     #calculaton part done 
                 #updation
