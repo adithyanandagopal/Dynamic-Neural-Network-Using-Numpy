@@ -37,7 +37,7 @@ Hidden Layer 2  (ReLU)
     ↓  
   ...
     ↓
-Output Layer    (Softmax)
+Output Layer    (Softmax or Sigmoid)
 ```
 
 Fully configurable — you define the number of layers and neurons:
@@ -61,6 +61,7 @@ nn = model(structure=\[input\_size, ...hidden..., num\_classes], base\_address="
 |-|-|-|
 |Hidden layers|ReLU|Fast, avoids vanishing gradient|
 |Output layer|Softmax|Converts raw scores to probabilities|
+|Output layer |Sigmoid| for binary-converts single neuron output to probability
 
 \---
 
