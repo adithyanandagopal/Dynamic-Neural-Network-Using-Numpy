@@ -261,11 +261,14 @@ class model:
         accuracy = (acc*100)/test_size
         print(f" test accuracy { accuracy}%")
         
-    def run(self, model_weights:str, x,):
-        with open(model_weights, 'rb') as f:
-            params = pickle.load(f)
-        weights = params['weights']
-        bias    = params['bias']
+    def run(self, model_weights:str, x):
+        try :
+            with open(model_weights, 'rb') as f:
+                params = pickle.load(f)
+            weights = params['weights']
+            bias    = params['bias']
+        except FileNotFoundError as e :
+            raise FileNotFoundError(f"model data not found :{e}")
 
         z3 = self.forward_pass(weights,bias,x)
         prediction = z3.argmax()
