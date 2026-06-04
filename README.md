@@ -88,7 +88,7 @@ User is responsible for preprocessing before passing data:
 x = x / 255.0
 
 # flatten to correct shape
-x = x.reshape(1, input\_size)
+x = x.reshape(1, input_size)
 
 # labels must be 0-indexed
 # 0 to num\_classes - 1
@@ -113,15 +113,15 @@ from model import model
 
 nn = model(
     structure    = \[784, 128, 64, 24],
-    base\_address = "path/to/save/"    # include trailing slash
+    base_address = "path/to/save/"    # include trailing slash
 )
 
 nn.fit(
-    train\_data = "path/to/train.csv",
-    test\_data  = "path/to/test.csv",
+    train_data = "path/to/train.csv",
+    test_data  = "path/to/test.csv",
     epoch      = 10,
     alpha      = 0.01,
-    batch\_size = 64
+    batch_size = 64
 )
 # weights auto-saved to base\_address/model.pkl after training
 ```

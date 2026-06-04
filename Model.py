@@ -126,9 +126,15 @@ class model:
         
 
     def fit(self,train_data:str,test_data:str,epoch:int,alpha:float,batch_size:int):
+        assert epoch>0, "epoch must be greater than 0"
+        assert 0<alpha<1, "alpha range -> (0,1)"
+        assert batch_size>0," batch size cant be less than 1"
         #loading data
-        df_train = pd.read_csv(train_data)
-        df_test = pd.read_csv(test_data)
+        try:
+            df_train = pd.read_csv(train_data)
+            df_test = pd.read_csv(test_data)
+        except FileNotFoundError as e:
+            raise FileNotFoundError(f"File not found: {e}")
 
         train_y = df_train["label"].values
         train_x = df_train.drop('label',axis=1).values
