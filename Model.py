@@ -43,7 +43,10 @@ PREPROCESSING (user responsibility before passing data):
 
 WEIGHTS:
     Saved automatically after training as 'model.pkl'
-    Location: base_address/model.pkl
+    Location: base_address/model.
+    
+PROGRESS:
+    added dropout. enter value of p on fit() function call . 0<p<1
 ================================================================================
 """
 import numpy as np 
@@ -99,9 +102,8 @@ class model:
             error = -(np.sum(y*np.log(z3 + 1e-9)))
         return error
     
-
-    
-    def forward_pass(self,w,b,x):
+    def forward_pass(self,w,b,x,training=False,p=0.0):
+        #p = dropout rate
         self.a = [] # raw outputs of each layer
         self.z = [] # after activation
         nw = len(w)
@@ -111,9 +113,11 @@ class model:
                 self.a.append(raw)
                 self.z.append(actv)
                 x = actv
-
+                if training and i != nw-1:
+                    mask = (np.random.rand(*x.shape) > p) / (1 - p)
+                    x = x * mask
         return self.z[-1]
-    
+     
     def delta(self,y):
         Delta = []
         n = len(self.weights)
@@ -125,10 +129,12 @@ class model:
         return Delta[::-1]
         
 
-    def fit(self,train_data:str,test_data:str,epoch:int,alpha:float,batch_size:int):
+    def fit(self,train_data:str,test_data:str,epoch:int,alpha:float,batch_size:int,p:float):
         assert epoch>0, "epoch must be greater than 0"
         assert 0<alpha<1, "alpha range -> (0,1)"
         assert batch_size>0," batch size cant be less than 1"
+        assert 0 < p < 1 ,"drop out must be in (0,1)"
+
         #loading data
         try:
             df_train = pd.read_csv(train_data)
@@ -193,7 +199,7 @@ class model:
 
                     y = self.one_hot_enc(y_batch,k)
 
-                    z3 = self.forward_pass(self.weights,self.bias,x)
+                    z3 = self.forward_pass(self.weights,self.bias,x,training=True,p=p)
                     
                     
                     loss +=self.cross_entropy(z3,y)  # later divide by batch size
@@ -270,7 +276,7 @@ class model:
         except FileNotFoundError as e :
             raise FileNotFoundError(f"model data not found :{e}")
 
-        z3 = self.forward_pass(weights,bias,x)
+        z3 = self.forward_pass(weights,bias,x,training=False)
         prediction = z3.argmax()
         confidence  = z3.max()*100
         print(f" prediction = {prediction} with {confidence} % confidence")
